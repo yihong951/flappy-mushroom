@@ -42,6 +42,14 @@ create trigger scores_before_insert
   before insert on public.scores
   for each row execute function public.scores_before_insert();
 
+-- Table access for the website's keys. Newer Supabase projects no longer grant this by default.
+-- Only these columns can be written; row level security below limits which rows.
+grant usage on schema public to anon, authenticated;
+grant select on public.players, public.scores to anon, authenticated;
+grant insert (id, nickname), update (nickname) on public.players to authenticated;
+grant insert (score) on public.scores to authenticated;
+grant usage on sequence public.scores_id_seq to authenticated;
+
 -- Row level security: everyone can read, players can only write their own rows.
 alter table public.players enable row level security;
 alter table public.scores enable row level security;

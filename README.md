@@ -1,33 +1,53 @@
-# Flappy Mushroom
+# Flappy Mushroom 🍄
 
-A Flappy Bird–style browser game for phones and desktops. Hop a toadstool through a night forest, absorb power caps (Giant, Zoom, Glow) and climb the daily, monthly and yearly rankings.
+**Play:** https://yihong951.github.io/flappy-mushroom/
 
-- Tap, Space or ↑ to hop.
-- Everything is in `index.html`. It needs no build step.
-- Rankings use [Supabase](https://supabase.com). Players are signed in anonymously in the background, scores save automatically after every run, and players can rename themselves on the rankings screen.
+Hop a little toadstool through a moonlit forest and climb the daily rankings.
 
-## 1. Turn on rankings (Supabase, free tier)
+Flappy Mushroom is a one-tap arcade game. Guide a cheerful toadstool through gaps in fallen logs, and see how far you can go before you bonk.
 
-1. Create a project at supabase.com.
-2. Go to **Authentication > Sign In / Providers** and turn on **Allow anonymous sign-ins**.
-3. Go to **SQL Editor > New query**, paste the contents of `supabase/schema.sql` and click **Run**.
-4. Go to **Project Settings > API** and copy the **Project URL** and the **anon public** key.
-5. In `index.html`, replace `YOUR_SUPABASE_URL` and `YOUR_SUPABASE_ANON_KEY` with those values.
+Glowing power caps float through the forest. Grab one for 5 seconds of:
 
-The anon key is meant to be public. The row level security rules in `schema.sql` let anyone read the rankings while each player can only add their own scores and rename themselves.
+- 🟣 **Giant**: grow big and smash straight through logs
+- 🔵 **Zoom**: speed up and earn double points
+- 🟡 **Glow**: become invincible
 
-Rankings reset at midnight UTC (daily), on the 1st of each month (monthly) and on 1 January (yearly). Each board shows every player's best run in that period.
+Your score saves automatically to the **daily, monthly and yearly rankings**. Pick a nickname on the rankings screen and earn medals: Button, Chanterelle, Morel and Truffle.
 
-Limitation: scores are sent by the player's browser, so a determined cheater could post a fake score. The database caps scores at 9999 and allows one score every 3 seconds per player. To remove a fake entry, delete its row in Supabase under **Table Editor > scores**.
+**Controls:** tap the screen, press Space or press ↑ to hop. Plays in any phone or desktop browser, with no download.
 
-## 2. Publish on GitHub Pages
+## Files
 
-The site is served straight from the `main` branch root, so every push to `main` updates the live game at
-`https://<username>.github.io/flappy-mushroom/`.
+| File | What it is |
+| --- | --- |
+| `index.html` | The whole game. It needs no build step. |
+| `supabase/schema.sql` | Database setup for the rankings |
+| `build-itch.ps1` | Builds the itch.io zip |
+| `cover.png`, `og-image.png`, `icons/` | Cover art, share preview and app icons |
+| `tools/` | Scripts that regenerate the images |
 
-## 3. Publish on itch.io
+## Updating the game
+
+Push to `main`. GitHub Pages serves the repo root, and the live site updates in about a minute.
+
+## Rankings (Supabase)
+
+Rankings use Supabase project `ttynjpmhqvgoykwpxfdn`. Its URL and public anon key are in `index.html`. The anon key is meant to be public.
+
+- Keep **Allow anonymous sign-ins** turned on (Authentication > Sign In / Providers). Every player is signed in anonymously in the background, and scores can't save without it.
+- Boards reset at midnight UTC (daily), on the 1st of the month (monthly) and on 1 January (yearly). Each board shows every player's best run in that period.
+- Players can only add their own scores and rename themselves. Scores are capped at 9999, with at most one every 3 seconds per player.
+- To remove a fake score, delete the row in **Table Editor > scores**. To remove a player and all their scores, delete them in **Table Editor > players**.
+
+To use a new Supabase project:
+
+1. Turn on anonymous sign-ins.
+2. Run all of `supabase/schema.sql` in **SQL Editor**.
+3. Put the new Project URL and anon key into `index.html`.
+
+## Publishing on itch.io
 
 1. Run `./build-itch.ps1`. It creates `dist/flappy-mushroom-itch.zip`.
-2. On itch.io, choose **Upload new project**. Set **Kind of project** to **HTML** and upload the zip.
-3. Tick **This file will be played in the browser**.
-4. Under embed options, set the viewport to **360 × 640**, and tick **Mobile friendly** (orientation: portrait), **Fullscreen button** and **Automatically start on page load**.
+2. Create a new itch.io project. Set **Kind of project** to **HTML**, upload the zip and tick **This file will be played in the browser**.
+3. Set the embed size to **360 × 640**, and tick **Mobile friendly** (portrait), **Fullscreen button** and **Automatically start on page load**.
+4. Upload `cover.png` as the cover image.
